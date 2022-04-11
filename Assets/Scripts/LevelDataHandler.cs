@@ -34,28 +34,30 @@ namespace Steph.Level
 
         #endregion
 
+        #region Methods
+
         private void Awake()
         {
             Instance = this;
             Score = 0;
 
+            ValidateTypes();
+        }
+
+        private void ValidateTypes()
+        {
             collectibles.Validate();
             enemies.Validate();
             obstacles.Validate();
             fallingArea.Validate();
         }
 
-
-        #region My Methods
-
-        //
-
         #endregion
     }
 
 
     [Serializable]
-    public class Collectibles : ICollide
+    public class Collectibles : ICollideType
     {
         #region Variables and Properties
 
@@ -70,8 +72,7 @@ namespace Steph.Level
         private List<CollectibleInstance> activeCollectibles;
 
         #endregion
-
-
+        
         #region Methods
 
         public void Validate()
@@ -98,7 +99,7 @@ namespace Steph.Level
         {
             activeCollectibles = new List<CollectibleInstance>();
 
-            Spawn(new Vector3(-4, 4, -1));
+            SpawnNew(new Vector3(-4, 4, -1));
         }
 
         public void OnCollision<T>(T instance)
@@ -108,7 +109,7 @@ namespace Steph.Level
             CollectibleInstance castType = instance as CollectibleInstance;
 
             //remove from list
-            RemoveFromActive(castType);
+            RemoveFromActiveList(castType);
 
             //destroy object
             GameObject.Destroy(castType.gameObject);
@@ -117,7 +118,7 @@ namespace Steph.Level
             LevelDataHandler.Score += value;
         }
 
-        public void Spawn(Vector3 spawnLocation)
+        public void SpawnNew(Vector3 spawnLocation)
         {
             //spawn
             GameObject newCollectibleObject =
@@ -126,26 +127,27 @@ namespace Steph.Level
             newCollectibleObject.name = defaultName;
 
             //check has script
-            if (!newCollectibleObject.TryGetComponent(out CollectibleInstance collectibleClass)) {
+            if (!newCollectibleObject.TryGetComponent(out CollectibleInstance collectibleClass))
+            {
                 collectibleClass = newCollectibleObject.AddComponent<CollectibleInstance>();
             }
 
             //add to list
-            if (!CheckList(collectibleClass))
-                AddToActive(collectibleClass);
+            if (!CheckActiveListForInstance(collectibleClass))
+                AddToActiveList(collectibleClass);
         }
 
-        public bool CheckList(CollectibleInstance collectibleInstance)
+        public bool CheckActiveListForInstance(CollectibleInstance collectibleInstance)
         {
             return activeCollectibles.Contains(collectibleInstance);
         }
 
-        public void AddToActive(CollectibleInstance collectibleInstance)
+        public void AddToActiveList(CollectibleInstance collectibleInstance)
         {
             activeCollectibles.Add(collectibleInstance);
         }
 
-        public void RemoveFromActive(CollectibleInstance collectibleInstance)
+        public void RemoveFromActiveList(CollectibleInstance collectibleInstance)
         {
             activeCollectibles.Remove(collectibleInstance);
         }
@@ -154,7 +156,7 @@ namespace Steph.Level
     }
 
     [Serializable]
-    public class Enemies : ICollide
+    public class Enemies : ICollideType
     {
         #region Variables and Properties
 
@@ -180,7 +182,7 @@ namespace Steph.Level
     }
 
     [Serializable]
-    public class Obstacles : ICollide
+    public class Obstacles : ICollideType
     {
         #region Variables and Properties
 
@@ -206,7 +208,7 @@ namespace Steph.Level
     }
 
     [Serializable]
-    public class FallingArea : ICollide
+    public class FallingArea : ICollideType
     {
         #region Variables and Properties
 
@@ -228,9 +230,18 @@ namespace Steph.Level
         #endregion
     }
 
-    public interface ICollide
+    #region Interfaces and Abstract Classes
+
+    public interface ICollideType
     {
         void Validate();
         void OnCollision<T>(T instance);
     }
+
+    public abstract class CollideInstance : MonoBehaviour
+    {
+        protected abstract void OnTriggerEnter2D(Collider2D collider);
+    }
+
+    #endregion
 }
