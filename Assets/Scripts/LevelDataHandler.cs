@@ -21,6 +21,7 @@ namespace Steph.Level
         //serialised private
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private Collectibles collectibles;
+        [Header("Below this header is not implemented:")]
         [SerializeField] private Enemies enemies;
         [SerializeField] private Obstacles obstacles;
         [SerializeField] private FallingArea fallingArea;
@@ -116,6 +117,7 @@ namespace Steph.Level
 
             //get score
             LevelDataHandler.Score += value;
+            Debug.Log("Score is: "+LevelDataHandler.Score);
         }
 
         public void SpawnNew(Vector3 spawnLocation)
