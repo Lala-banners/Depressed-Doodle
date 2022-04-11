@@ -17,8 +17,9 @@ namespace Steph.Level
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("collided");
-            LevelDataHandler.Instance.Collectibles.OnCollision(this);
+            if ((1 << other.gameObject.layer & LevelDataHandler.Instance.PlayerLayer) != 0)  {
+                LevelDataHandler.Instance.Collectibles.OnCollision(this);
+            }
         }
     }
 }

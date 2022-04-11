@@ -701,6 +701,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb10b2a3271194646b3ddeafd62b2450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   collectibles:
     layer:
       serializedVersion: 2

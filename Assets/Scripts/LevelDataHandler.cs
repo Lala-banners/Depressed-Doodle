@@ -16,13 +16,17 @@ namespace Steph.Level
 
         public static LevelDataHandler Instance;
 
+        public static int Score;
+
         //serialised private
+        [SerializeField] private LayerMask playerLayer;
         [SerializeField] private Collectibles collectibles;
         [SerializeField] private Enemies enemies;
         [SerializeField] private Obstacles obstacles;
         [SerializeField] private FallingArea fallingArea;
 
         //public properties
+        public LayerMask PlayerLayer => playerLayer;
         public Collectibles Collectibles => collectibles;
         public Enemies Enemies => enemies;
         public Obstacles Obstacles => obstacles;
@@ -33,6 +37,7 @@ namespace Steph.Level
         private void Awake()
         {
             Instance = this;
+            Score = 0;
 
             collectibles.Validate();
             enemies.Validate();
@@ -54,12 +59,14 @@ namespace Steph.Level
     {
         #region Variables and Properties
 
+        //serialised private
         [SerializeField] private LayerMask layer;
         [SerializeField] private GameObject prefab;
         [SerializeField, Min(0)] private int value;
         [SerializeField] private Transform collectibleParentObject;
         [SerializeField] private string defaultName;
 
+        //local
         private List<CollectibleInstance> activeCollectibles;
 
         #endregion
@@ -72,11 +79,14 @@ namespace Steph.Level
             if (layer == 0 || layer == 119) throw new NullRE("Collectible layer not valid.");
             if (prefab == null) throw new NullRE("Collectible prefab is not attached to Level Data Handler.");
             if (value == 0) Debug.LogWarning("Collectibles will not add to score if value is 0.");
-            if (collectibleParentObject == null) {
+            if (collectibleParentObject == null)
+            {
                 collectibleParentObject = LevelDataHandler.Instance.transform;
                 Debug.LogWarning("No parent object set for new collectibles spawned.");
             }
-            if (defaultName.IsNullOrWhitespace()) {
+
+            if (defaultName.IsNullOrWhitespace())
+            {
                 defaultName = "Collectible";
                 Debug.LogWarning("Default name set to 'Collectible'");
             }
@@ -93,40 +103,36 @@ namespace Steph.Level
 
         public void OnCollision<T>(T instance)
         {
-            Debug.Log("passed as T");
+            //check valid type
             if (instance.GetType() != typeof(CollectibleInstance)) return;
-
             CollectibleInstance castType = instance as CollectibleInstance;
+
+            //remove from list
             RemoveFromActive(castType);
 
+            //destroy object
             GameObject.Destroy(castType.gameObject);
+
+            //get score
+            LevelDataHandler.Score += value;
         }
 
         public void Spawn(Vector3 spawnLocation)
         {
-            Debug.Log("entered method");
-
             //spawn
             GameObject newCollectibleObject =
                 GameObject.Instantiate(prefab, spawnLocation, Quaternion.identity, collectibleParentObject);
-            Debug.Log(newCollectibleObject + " spawned successfully");
-
+            //naming
             newCollectibleObject.name = defaultName;
-            Debug.Log("Successfully named as: " + newCollectibleObject.name);
 
             //check has script
-            if (!newCollectibleObject.TryGetComponent(out CollectibleInstance collectibleClass))
-            {
+            if (!newCollectibleObject.TryGetComponent(out CollectibleInstance collectibleClass)) {
                 collectibleClass = newCollectibleObject.AddComponent<CollectibleInstance>();
             }
-
-            Debug.Log("Checked/added CollectibleInstance monobehaviour on object.");
 
             //add to list
             if (!CheckList(collectibleClass))
                 AddToActive(collectibleClass);
-            Debug.Log("Checked/added to list of active collectibles.");
-            Debug.Log("There are now " + activeCollectibles.Count + " active collectibles.");
         }
 
         public bool CheckList(CollectibleInstance collectibleInstance)
