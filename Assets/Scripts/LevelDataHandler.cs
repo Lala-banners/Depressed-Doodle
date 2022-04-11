@@ -100,7 +100,7 @@ namespace Steph.Level
         {
             activeCollectibles = new List<CollectibleInstance>();
 
-            SpawnNew(new Vector3(-4, 4, -1));
+            //SpawnNew(new Vector3(-4, 4, -1));
         }
 
         public void OnCollision<T>(T instance)
