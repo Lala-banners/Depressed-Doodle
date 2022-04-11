@@ -1108,10 +1108,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1462880330}
     m_Modifications:
-    - target: {fileID: 2014903083619973841, guid: 697e8c70c2b5eed4aa007d00ce45344a, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2014903083619973842, guid: 697e8c70c2b5eed4aa007d00ce45344a, type: 3}
       propertyPath: m_Name
       value: Collectible
