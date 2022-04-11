@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Steph.Level.Collect;
 using UnityEngine;
 
@@ -15,7 +17,7 @@ namespace Steph.Level
 
         private void Awake()
         {
-            collectibles ??= gameObject.GetComponent<Collectibles>();
+            
         }
 
 
@@ -24,5 +26,30 @@ namespace Steph.Level
         //
 
         #endregion
+    }
+
+    namespace Collect
+    {
+        [Serializable]
+        public class Collectibles 
+        {
+            #region Variables and Properties
+
+            [SerializeField] private LayerMask collectibleLayer;
+            [SerializeField] private GameObject prefab;
+            [SerializeField,Range(1,10)] private int frequency;
+
+            #endregion
+
+
+
+            #region My Methods
+
+            //get collectible
+
+            //
+
+            #endregion
+        }
     }
 }
