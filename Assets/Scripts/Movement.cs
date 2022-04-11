@@ -7,17 +7,20 @@ namespace Lara.Movement
 {
     public class Movement : MonoBehaviour
     {
+        [Header("Player Stuff")]
         public float moveSpeed = 5;
         public float jumpForce;
         private bool facingRight, isJumping;
         private float moveDir;
         private Rigidbody2D rb;
 
+        [Header("Ground Stuff")]
         public LayerMask groundObj;
         public Transform groundCheck;
-        public bool isGrounded;
+        private bool isGrounded;
         public float checkRadius;
 
+        [Header("Jumping")]
         public int maxJumpCount;
         private int jumpCount;
 
@@ -75,7 +78,7 @@ namespace Lara.Movement
         {
             rb.velocity = new Vector2(moveDir * moveSpeed, rb.velocity.y);
             
-            if (isJumping && jumpCount > 0)
+            if (isJumping)
             {
                 Vector2 jump = new Vector2(0f, 2f);
                 rb.AddForce(jump * jumpForce, ForceMode2D.Impulse);
