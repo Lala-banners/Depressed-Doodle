@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 415393593}
   - component: {fileID: 415393592}
   - component: {fileID: 415393594}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,9 +581,8 @@ MonoBehaviour:
   jumpForce: 3
   groundObj:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1024
   groundCheck: {fileID: 379037497}
-  isGrounded: 0
   checkRadius: 0.2
   maxJumpCount: 3
 --- !u!1 &1093432282
